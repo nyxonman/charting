@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>My JS Charting</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <!-- <link rel="stylesheet" type="text/css" href="jquery-ui.min.css"> -->
+  <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+  <!-- <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' /> -->
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="css/myStyle.css"/>
+
+</head>
+
+<body>
+<!-- Control panel -->
+<div class="container-fluid">
+<div class="row control">
+  <!-- interval control start, stop -->
+  <div class="col-sm-5">
+      <div class="row">
+        <div class="col-sm-6">
+
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="updateInterval">Interval</label>
+            </div>
+            <select class="custom-select custom-select-sm" id="updateInterval">
+              <option value="1" >1</option>
+              <option value="2" >2</option>
+              <option value="3"  >3</option>
+              <option value="5" >5</option>
+              <option value="10" selected="selected" >10</option>
+              <option value="15">15</option>
+              <option value="30" >30</option>
+              <option value="45">45</option>
+            </select>
+            <select class="custom-select custom-select-sm" id="updateIntervalType">
+              <option value="1" selected="selected">seconds</option>
+              <option value="60" >minutes</option>
+              <option value="3600" >hours</option>
+            </select>
+          </div>
+            
+        </div>
+        <div class="col-sm-6">
+            <button id="btnStart" class="btn btn-success btn-sm">Start Collect</button>
+            <button id="btnStop" class="btn btn-warning btn-sm">Stop Collect</button>
+        </div>
+      </div>
+      <!-- end of row -->
+
+      <div class="row">
+        <div class="col-sm-6">
+
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Date</span>
+              </div>
+              <input class="form-control form-control-sm" type="text" name="myDate" id="myDate" value="" placeholder="dd/mm/yyyy, hh:mm:ss" />
+              <div class="input-group-append">
+                <button id="btnNow" class="btn btn-outline-success btn-sm">Now</button>
+              </div>
+              <div class="input-group-append">
+                <button id="btnSet" class="btn btn-outline-primary btn-sm">Set</button></div>
+              </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+          <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">RX Limit</span>
+              </div>
+              <input class="form-control " type="text" name="myRxLimit" id="myRxLimit" value="0" />
+              
+              <div class="input-group-append">
+                <button id="btnSetLimit" class="btn btn-outline-primary btn-sm">Set</button>
+              </div>
+              <div class="input-group-append">
+                <span class="input-group-text" id="totalRx"></span>
+              </div>
+
+          </div>
+          <!-- <div class="row">
+              <div class="col-sm-4">RX Limit: </div>
+              <div class="col-sm-6"><input class="form-control form-control-sm" type="text" name="myRxLimit" id="myRxLimit" value="0"/><span id="totalRx"></span></div>
+              <div class="col-sm-2"><button id="btnSetLimit" class="btn btn-outline-primary btn-sm">Set</button></div>
+          </div> -->
+                    
+        </div>
+        <!-- end of col-sm-12 -->
+      </div>
+      <!-- end of row -->
+  </div>
+  <!-- col-sm-5 -->
+
+  <!-- node filters -->
+  <div class="col-sm-3">
+      <dl class="dropdown">
+
+          <dt>
+          <a href="#">
+            <button id= "filterNodes" class="hida btn btn-info btn-sm">Filter Nodes</button>
+            <button id="selectAll" class="btn btn-outline-success btn-sm">Select All </button>
+            <button id="unSelectAll" class="btn btn-outline-danger btn-sm">Unselect All </button>
+            <p class="multiSel"></p>
+          </a>
+          </dt>
+
+          <dd>
+              <div class="mutliSelect" id="multiSelect">
+                  <ul class="bringFront">
+
+                  </ul>
+              </div>
+          </dd>
+      </dl>
+  </div>
+  <!-- info -->
+  <div class="col-sm-4">
+    <span class="float-right">
+          <ul>
+              <li id="lastUpdateTime">Last Update:</li>
+              <li id="startCollectTime">Start Time: </li>
+              <li id="stopCollectTime">Stop Time: </li>
+              <li id="collectionDurationTime">Collection Duration</li>
+          </ul>
+        </span>
+  </div>
+
+
+</div>
+<!-- end of row control -->
+
+<div class="row">
+  <div class="col-sm-5 loading-div pull-left"><h3 id="tpcValue" class="text-left">TPRC</h3></div>
+  <div class="col-sm-2 loading-div" ><img src="img/loading.gif" id="loading"></div>
+  <div class="col-sm-5 loading-div" >
+      <!-- <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="updateInterval">LOG</label>
+            </div>
+            <div class="custom-file">
+  <input type="file" class="custom-file-input" id="customFile">
+  <label class="custom-file-label" for="customFile">Choose file</label>
+</div>
+            
+          </div> -->
+          <input type="file" class="form-control-file" id="logFileSelect" accept=".log">
+          
+  </div>
+</div>
+
+<!-- navs for network and power -->
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-network-tab" data-toggle="pill" href="#pills-network" role="tab" aria-controls="pills-network" aria-selected="true">Network</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-power-tab" data-toggle="pill" href="#pills-power" role="tab" aria-controls="pills-power" aria-selected="false">Power</a>
+  </li>
+</ul>
+
+<!-- nav contents -->
+
+<div class="tab-content" id="pills-tabContent">
+error est
+  <!--  nav contents for network-->
+  <div class="tab-pane fade show active" id="pills-network" role="tabpanel" aria-labelledby="pills-network-tab">
+
+        <div class="myTabs" >
+
+            <ul>
+                <li ><a href="#tabs-etx" style="font-size: 12px">ETX</a></li>
+                <li ><a href="#tabs-ewmaEtx" style="font-size: 12px">EWMA ETX</a></li>
+                <li ><a href="#tabs-rxTime" style="font-size: 12px">Received over time</a></li>
+                <li ><a href="#tabs-nodeTsn" style="font-size: 12px">Timeline</a></li>
+                <!-- <li ><a href="#tabs-rxNode" style="font-size: 12px">Received per Node</a></li>
+                <li ><a href="#tabs-txNode" style="font-size: 12px">Transmissions per Node</a></li> -->
+                <li ><a href="#tabs-txRxPdrNode" style="font-size: 12px">TX/RX per Node</a></li>
+                <li ><a href="#tabs-ccaTime" style="font-size: 12px">Channel Busy over time</a></li>
+                <li ><a href="#tabs-ccaNode" style="font-size: 12px">Channel Busy per Node</a></li>
+                <li ><a href="#tabs-avgPathLoss" style="font-size: 12px">Average PathLoss</a></li>
+                <li ><a href="#tabs-lostNode" style="font-size: 12px">Lost per Node</a></li>
+                <li ><a href="#tabs-duplicateNode" style="font-size: 12px">Duplicates per Node</a></li>
+                <li ><a href="#tabs-neighbors" style="font-size: 12px">Neighbors</a></li>
+            </ul>
+            <div id="tabs-etx" class="chartTabContent" >
+                <div class="chartsClass" id="etx"></div>
+            </div>
+            <div id="tabs-ewmaEtx" class="chartTabContent" >
+                <div class="chartsClass" id="ewmaEtx"></div>
+            </div>
+            <div id="tabs-rxTime" class="chartTabContent" >
+                <div class="chartsClass" id="rxTime"></div>
+            </div>
+             <div id="tabs-nodeTsn" class="chartTabContent" >
+                <div class="chartsClass" id="nodeTsn"></div>
+            </div>
+            <!-- <div id="tabs-rxNode" class="chartTabContent" >
+                <div class="chartsClass" id="rxNode"></div>
+            </div>
+            <div id="tabs-txNode" class="chartTabContent" >
+                <div class="chartsClass" id="txNode"></div>
+            </div> -->
+             <div id="tabs-txRxPdrNode" class="chartTabContent" >
+                <div class="chartsClass" id="txRxPdrNode"></div>
+            </div>
+            <div id="tabs-ccaTime" class="chartTabContent" >
+                <div class="chartsClass" id="ccaTime"></div>
+            </div>
+            <div id="tabs-ccaNode" class="chartTabContent" >
+                <div class="chartsClass" id="ccaNode"></div>
+            </div>
+            <div id="tabs-avgPathLoss" class="chartTabContent" >
+                <div class="chartsClass" id="avgPathLoss"></div>
+            </div>
+            <div id="tabs-lostNode" class="chartTabContent" >
+                <div class="chartsClass" id="lostNode"></div>
+            </div>
+            <div id="tabs-duplicateNode" class="chartTabContent" >
+                <div class="chartsClass" id="duplicateNode"></div>
+            </div>
+            <div id="tabs-neighbors" class="chartTabContent" >
+                <div class="chartsClass" id="neighbors"></div>
+            </div>
+
+        </div>
+  </div>
+
+  <!-- nav contents for  power -->
+  <div class="tab-pane fade" id="pills-power" role="tabpanel" aria-labelledby="pills-power-tab">
+
+        <div class="myTabs" >
+
+            <ul>
+                <li ><a href="#tabs-powerLevel" style="font-size: 12px">Power Level</a></li>
+                <li ><a href="#tabs-averagePower" style="font-size: 12px">Average Power</a></li>
+                <li ><a href="#tabs-instantPower" style="font-size: 12px">Instantaneous Power</a></li>
+                <li ><a href="#tabs-rateLevel" style="font-size: 12px">Rate Level</a></li>
+                <li ><a href="#tabs-txEnergyPktNode" style="font-size: 12px">Average Energy/pkt</a></li>
+                <li ><a href="#tabs-txEnergyNode" style="font-size: 12px">Transmission Energy per Node</a></li>
+                <li ><a href="#tabs-txEnergyTime" style="font-size: 12px">Tx Energy Consumption History</a></li>
+                <li ><a href="#tabs-rssi"  style="font-size: 12px">Rssi</a></li>
+                <li ><a href="#tabs-powerEtx"  style="font-size: 12px">Power vs ETX</a></li>
+                <li ><a href="#tabs-powerEwmaEtx"  style="font-size: 12px">Power vs EWMA ETX</a></li>
+
+            </ul>
+            <div id="tabs-powerLevel" class="chartTabContent" >
+                <div class="chartsClass" id="powerLevel"></div>
+            </div>
+            <div id="tabs-averagePower" class="chartTabContent" >
+                <div class="chartsClass" id="averagePower"></div>
+
+            </div>
+            <div id="tabs-instantPower" class="chartTabContent" >
+                <div class="chartsClass" id="instantPower"></div>
+            </div>
+
+            <div id="tabs-rateLevel" class="chartTabContent" >
+                <div class="chartsClass" id="rateLevel"></div>
+            </div>
+
+            <div id="tabs-txEnergyNode" class="chartTabContent" >
+                <div class="chartsClass" id="txEnergyNode"></div>
+            </div>
+            <div id="tabs-txEnergyPktNode" class="chartTabContent" >
+                <div class="chartsClass" id="txEnergyPktNode"></div>
+            </div>
+            <div id="tabs-txEnergyTime" class="chartTabContent" >
+                <div class="chartsClass" id="txEnergyTime"></div>
+            </div>
+            <div id="tabs-rssi" class="chartTabContent" >
+                <div class="chartsClass" id="rssi"></div>
+            </div>
+            <div id="tabs-powerEtx" class="chartTabContent" >
+                <div class="chartsClass" id="powerEtx"></div>
+            </div>
+            <div id="tabs-powerEwmaEtx" class="chartTabContent" >
+                <div class="chartsClass" id="powerEwmaEtx"></div>
+            </div>
+        </div>
+
+  </div>
+  <!-- end nav contents for  power -->
+
+</div>
+<div id="myDataTable">Chart data</div>
+
+
+
+  <!-- <div class="chartsClass" id="chartContainer"></div> -->
+
+ <div id="showtxt"></div>
+</div>
+  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+  <!-- <script type="text/javascript" src="js/jquery.canvasjs.min.js" ></script> -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/jquery.canvasjs.min.js" ></script>
+  <script type="text/javascript" src="js/require.js"></script>
+
+  <script type="text/javascript" src="js/myConfig.js"></script>
+  <script type="text/javascript" src="js/myFunctions.js"></script>
+  <script type="text/javascript" src="js/myScript.js"></script>
+<div id="cover" > </div>
+</body>
+</html>
