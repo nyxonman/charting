@@ -55,6 +55,11 @@ var TIMESTAMP_INIT    = 0;
 var TIMESTAMP_FINAL   = 0;
 const MIN_TX_POWER_DB = -13;
 
+// for network lifetime
+const VOLTAGE = 3; // volts
+const curr_rating = 3000; //mAH
+const ENERGY_INIT = VOLTAGE * curr_rating * 3600; //in mJoules
+
 /*data rate and transmission time*/
 var DATA_RATE,DATA_SIZE, TIME_PER_PKT;
 if(TEST_HW){
@@ -72,6 +77,7 @@ if(TEST_HW){
 charts = {
     "powerLevel"      : {},
     "rateLevel"       : {},
+    "lifetimeNode"    : {},
     "rssi"            : {},
     "etx"             : {},
     "ewmaEtx"         : {},
@@ -79,7 +85,7 @@ charts = {
     "duplicateNode"   : {},
     // "rxNode"       : {},
     "rxTime"          : {},
-    "nodeTsn"          : {},
+    "nodeTsn"         : {},
     // "txNode"       : {},
     "txEnergyNode"    : {},
     "txEnergyPktNode" : {},
@@ -98,20 +104,21 @@ charts = {
 // chart types
 chartTypes = {
         "powerLevel"      : "line",
-        "rateLevel"      : "line",
+        "rateLevel"       : "line",
         "rssi"            : "line",
         "etx"             : "line",
         "ewmaEtx"         : "spline",
         // "rxNode"       : "column",
         // "txNode"       : "column",
         "txEnergyNode"    : "column",
+        "lifetimeNode"    : "column",
         "txEnergyPktNode" : "column",
         "txEnergyTime"    : "line",
         "ccaNode"         : "column",
         "lostNode"        : "column",
         "duplicateNode"   : "column",
         "rxTime"          : "scatter",
-        "nodeTsn"          : "scatter",
+        "nodeTsn"         : "scatter",
         "ccaTime"         : "scatter",
         // "pathLoss"     : "column",
         "avgPathLoss"     : "column",
@@ -132,6 +139,7 @@ dataTableOption = {
         // "rxNode"       : ,
         // "txNode"       : ,
         "txEnergyNode"    : true,
+        "lifetimeNode"    : true,
         "txEnergyPktNode" : true,
         "txEnergyTime"    : false,
         "ccaNode"         : true,
@@ -154,6 +162,7 @@ dataTableOption = {
 datasets = {
     "powerLevel"      : [],
     "rateLevel"       : [],
+    "lifetimeNode"    : [],
     "rssi"            : [],
     "etx"             : [],
     "ewmaEtx"         : [],
@@ -232,6 +241,11 @@ chartOptions = {
                         "chartTitle" : "Total Transmitted Energy per Node (mJoules)",
                         "xAxisTitle" : "NODES",
                         "yAxisTitle" : "TX energy Consumed (mJoules)"
+                    },
+    "lifetimeNode"       : {
+                        "chartTitle" : "Node Lifetime (Battery Rating "+VOLTAGE+"V, "+curr_rating+"mAH)",
+                        "xAxisTitle" : "NODES",
+                        "yAxisTitle" : "LifeTime (hours)"
                     },
     "txEnergyPktNode"       : {
                         "chartTitle" : "Average Energy per pkt per Node (mJoules)",

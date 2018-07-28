@@ -33,7 +33,7 @@
             <select class="custom-select custom-select-sm" id="updateInterval">
               <option value="1" >1</option>
               <option value="2" >2</option>
-              <option value="3"  >3</option>
+              <option value="3" >3</option>
               <option value="5" >5</option>
               <option value="10" selected="selected" >10</option>
               <option value="15">15</option>
@@ -144,18 +144,7 @@
   <div class="col-sm-5 loading-div pull-left"><h3 id="tpcValue" class="text-left">TPRC</h3></div>
   <div class="col-sm-2 loading-div" ><img src="img/loading.gif" id="loading"></div>
   <div class="col-sm-5 loading-div" >
-      <!-- <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="updateInterval">LOG</label>
-            </div>
-            <div class="custom-file">
-  <input type="file" class="custom-file-input" id="customFile">
-  <label class="custom-file-label" for="customFile">Choose file</label>
-</div>
-            
-          </div> -->
-          <input type="file" class="form-control-file" id="logFileSelect" accept=".log">
-          
+      <input type="file" class="form-control-file" id="logFileSelect" accept=".log">
   </div>
 </div>
 
@@ -246,9 +235,10 @@
                 <li ><a href="#tabs-averagePower" style="font-size: 12px">Average Power</a></li>
                 <li ><a href="#tabs-instantPower" style="font-size: 12px">Instantaneous Power</a></li>
                 <li ><a href="#tabs-rateLevel" style="font-size: 12px">Rate Level</a></li>
+                <li ><a href="#tabs-lifetimeNode" style="font-size: 12px">Lifetime</a></li>
                 <li ><a href="#tabs-txEnergyPktNode" style="font-size: 12px">Average Energy/pkt</a></li>
-                <li ><a href="#tabs-txEnergyNode" style="font-size: 12px">Transmission Energy per Node</a></li>
-                <li ><a href="#tabs-txEnergyTime" style="font-size: 12px">Tx Energy Consumption History</a></li>
+                <li ><a href="#tabs-txEnergyNode" style="font-size: 12px">Transmission Energy</a></li>
+                <li ><a href="#tabs-txEnergyTime" style="font-size: 12px">Tx Energy Cons. History</a></li>
                 <li ><a href="#tabs-rssi"  style="font-size: 12px">Rssi</a></li>
                 <li ><a href="#tabs-powerEtx"  style="font-size: 12px">Power vs ETX</a></li>
                 <li ><a href="#tabs-powerEwmaEtx"  style="font-size: 12px">Power vs EWMA ETX</a></li>
@@ -267,6 +257,10 @@
 
             <div id="tabs-rateLevel" class="chartTabContent" >
                 <div class="chartsClass" id="rateLevel"></div>
+            </div>
+
+            <div id="tabs-lifetimeNode" class="chartTabContent" >
+                <div class="chartsClass" id="lifetimeNode"></div>
             </div>
 
             <div id="tabs-txEnergyNode" class="chartTabContent" >

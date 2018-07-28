@@ -229,6 +229,7 @@ function processData(output){
         xyTxNodeData        = [],
         xyPdrNodeData       = [],
         xyTxEnergyNodeData  = [],
+        xyLifetimeNodeData  = [],
         xyCcaNodeData       = [],
         xyAvgPathLossData   = [],
         xyLostNodeData      = [],
@@ -394,12 +395,25 @@ function processData(output){
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
+
+             var currEnergy = parseInt(splitArray[POS_TOTAL_TX_ENERGY])
              xyTxEnergyNodeData[cnt] = {
                                     x          : cnt+1,
-                                    y          : parseInt(splitArray[POS_TOTAL_TX_ENERGY]),
+                                    y          : currEnergy,
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
+
+             var energyRem = ENERGY_INIT - currEnergy;
+             var dur       = TIMESTAMP_FINAL - TIMESTAMP_INIT;
+             var drainRate = currEnergy / dur;
+             var lifetime  = Math.floor(energyRem / drainRate);
+            xyLifetimeNodeData[cnt] = {
+                                    x          : cnt+1,
+                                    y          : lifetime,
+                                    label      : "Node " + id ,
+                                    indexLabel : "{y}"
+            };
             xyCcaNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : totalCca,
@@ -631,6 +645,10 @@ function processData(output){
                     type       : chartTypes["txEnergyNode"],
                     dataPoints : xyTxEnergyNodeData
     };
+    lifetimeNodeObj = {
+                    type       : chartTypes["lifetimeNode"],
+                    dataPoints : xyLifetimeNodeData
+    };
     ccaNodeObj = {
                     type       : chartTypes["ccaNode"],
                     dataPoints : xyCcaNodeData
@@ -659,6 +677,7 @@ function processData(output){
     datasets["txRxPdrNode"].push(rxNodeTmpObj);
     datasets["txRxPdrNode"].push(pdrNodeObj);
     datasets["txEnergyNode"].push(txEnergyNodeObj);
+    datasets["lifetimeNode"].push(lifetimeNodeObj);
     datasets["ccaNode"].push(ccaNodeObj);
     datasets["avgPathLoss"].push(avgPathLossObj);
     datasets["lostNode"].push(lostNodeObj);
