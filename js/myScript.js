@@ -20,6 +20,7 @@ var first                 = true;
 var RX_LIMIT              = 0;
 var TPC                   = 0;
 var RATE                  = 0;
+var offEndTime            = 0;
 
 /*initialize the multi-dimensional array*/
 var nodeArray      = [];
@@ -47,6 +48,7 @@ $(document).ready(function(){
     var dateStr="";
     dateStr=filename==""?filename: date.substring(0,2) +"/"+date.substring(2,4)+"/"+date.substring(4)+", "+time.substring(0,2)+":"+time.substring(2,4)+":"+time.substring(4,6);
     console.log("date " + dateStr);
+
     // console.log("ajaxGetData");
     ajaxGetData(function(output){
         //console.log("FILTERED ")
@@ -233,7 +235,8 @@ function processData(output){
         xyDuplicateNodeData = [],
         xyInstantPowerData  = [],
         xyTxEnergyPktData   = [],
-        xyAvgPowerData      = [];
+        xyAvgPowerData      = [],
+        TIMESTAMP_FINAL       = 0;
 
 //console.log("HERE 4 " + getDateTime());
 
@@ -250,6 +253,7 @@ function processData(output){
             var tmpAvgPower    = 0;
             var tmpAvgEnergy   = 0;
             var totalCca       = 0;
+            var timestamp      = 0;
             xyEtxData          = [],
             xyEwmaEtxData      = [],
             xyRssiData         = [],
@@ -341,7 +345,8 @@ function processData(output){
                 };
 
             });
-            // end of process per one node
+            // end of process per one node. timestamp used in canvasJS is in msec but our TIMESTAMP_FINAL and TIMESTAMP_INIT are in seconds
+            TIMESTAMP_FINAL = (timestamp > TIMESTAMP_FINAL*MSEC_FACTOR) ? timestamp/MSEC_FACTOR : TIMESTAMP_FINAL;
 
             var len               = nodeArray[id].length
             tmpAvgPower           = Math.floor(tmpAvgPower/len);
@@ -569,6 +574,10 @@ function processData(output){
 
     });
     // end of Main Loop
+
+    // update the last timestamp obtained
+    var intv = TIMESTAMP_FINAL - TIMESTAMP_INIT
+    $("#rxDuration").html("RX Duration: " + intv + "sec [ " + msToTime1(intv*MSEC_FACTOR) + " ]");
 
     //console.log("HERE 5 " + getDateTime());
     avgPowerObj = {

@@ -1,4 +1,4 @@
-const CHART_VERSION = 2.7
+const CHART_VERSION = 2.8
 const TEST_HW = 1;
 
 var LOG_FILE_NAME = "LOG_TPC.log";
@@ -49,13 +49,10 @@ if (TEST_HW == 0){
     POS_RSSI            = 17;
 }
 
-var MSEC_FACTOR = 1000;
-if (TEST_HW) {
-    MSEC_FACTOR = 1000;
-}
-
-const ETX_FACTOR = 128;
-var TIMESTAMP_INIT = 0;
+const MSEC_FACTOR     = 1000;
+const ETX_FACTOR      = 128;
+var TIMESTAMP_INIT    = 0;
+var TIMESTAMP_FINAL   = 0;
 const MIN_TX_POWER_DB = -13;
 
 /*data rate and transmission time*/

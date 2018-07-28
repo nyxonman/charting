@@ -98,7 +98,7 @@ function toTimestamp(year,month,day,hour,minute,second){
  var datum          = new Date(Date.UTC(year,month-1,day,hour,minute,second));
  var timezoneOffset = datum.getTimezoneOffset() * 60;
 
- return (datum.getTime()/1000 + timezoneOffset);
+ return (datum.getTime()/1000 + timezoneOffset); //  in seconds
 }
 
 function setDateTimeNow(str){
@@ -124,7 +124,7 @@ function setInitTimeStamp(){
     var temp = full.split(',')
     var date = temp[0].split('/')
     var time = temp[1].split(':');
-
+    // console.log(full)
     TIMESTAMP_INIT = toTimestamp(date[2],date[1],date[0],time[0],time[1],time[2]);
     console.log("Init Date: " + full + " [Timestamp: " + TIMESTAMP_INIT + "]")
 }
