@@ -247,8 +247,8 @@ function processData(output){
     // MAIN LOOP
     $.each(nodeCountArray,function(id, count){
         if($.inArray(id,filteredNodes) != -1){
-             console.log("NODE " +id);
-             console.log(nodeArray[id]);
+             // console.log("NODE " +id);
+             // console.log(nodeArray[id]);
             var lastPowerlevel = 0;
             var yData          = [];
             var xyData         = [];
@@ -423,9 +423,7 @@ function processData(output){
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
             };
-            if(id==2){
-                console.log("unq " + unq.length + " data " + DATA_SIZE + " dur " + dur)
-            }
+            
             xyThroughputNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : (unq.length-1) * DATA_SIZE * 8 / dur  ,
