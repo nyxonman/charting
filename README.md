@@ -2,7 +2,7 @@
 
 ## Changelogs
 
-###v_2.8.1
+### v_2.8.1
 
 (2018-07-29 18:42:43 +0200) <nyxonman> removed extra logs
 (2018-07-29 18:42:09 +0200) <nyxonman> Throughput Feature added, DATA SIZE constant changed to 138, Timestamp final changed the way it is calculated. it is now calculated before hand
