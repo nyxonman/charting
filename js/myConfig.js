@@ -63,7 +63,7 @@ const ENERGY_INIT = VOLTAGE * curr_rating * 3600; //in mJoules
 /*data rate and transmission time*/
 var DATA_RATE,DATA_SIZE, TIME_PER_PKT;
 if(TEST_HW){
-    DATA_SIZE    = 64; // bytes
+    DATA_SIZE    = 138; // bytes
     DATA_RATE    = 12.5; //kbps
     TIME_PER_PKT = DATA_SIZE*8 / (DATA_RATE*1000); //IN SECONDS
 }else{
@@ -97,6 +97,7 @@ charts = {
     "averagePower"    : {},
     "instantPower"    : {},
     "txRxPdrNode"     : {},
+    "throughputNode"      : {},
     "powerEtx"        : {},
     "powerEwmaEtx"    : {}
 };
@@ -124,6 +125,7 @@ chartTypes = {
         "avgPathLoss"     : "column",
         "averagePower"    : "column",
         "instantPower"    : "column",
+        "throughputNode"    : "column",
         "powerEtx"        : "multiLine",
         "txRxPdrNode"     : "multiLine",
         "powerEwmaEtx"    : "multiLine"
@@ -146,12 +148,13 @@ dataTableOption = {
         "lostNode"        : true,
         "duplicateNode"   : true,
         "rxTime"          : false,
-        "nodeTsn"          : false,
+        "nodeTsn"         : false,
         "ccaTime"         : false,
         // "pathLoss"     : ,
         "avgPathLoss"     : true,
         "averagePower"    : true,
         "instantPower"    : true,
+        "throughputNode"  : true,
         "powerEtx"        : false,
         "txRxPdrNode"     : true,
         "powerEwmaEtx"    : false
@@ -180,6 +183,7 @@ datasets = {
     "avgPathLoss"     : [],
     "averagePower"    : [],
     "instantPower"    : [],
+    "throughputNode"    : [], // = total number of unique packets received * pkt size in bytes *8 / duration of the test
     "powerEtx"        : [],
     "txRxPdrNode"     : [],
     "powerEwmaEtx"    : []
@@ -302,6 +306,13 @@ chartOptions = {
                         "chartTitle" : "Instantaneous Power Level",
                         "xAxisTitle" : "NODES",
                         "yAxisTitle" : "Instantaneous Power"
+                    },
+    "throughputNode" : {
+                        "chartTitle" : "Throughput (bits per sec)",
+                        "xAxisTitle" : "NODES",
+                        "yAxisTitle" : "Throughput",
+                        "thTitle"     : "Theoritical Throughput",
+                        "thValue"     : "18.4 bps"
                     },
     "powerEtx" : {
                         "chartTitle"  : "Power Vs ETX",

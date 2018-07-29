@@ -208,6 +208,7 @@ function processData(output){
     }
     //console.log("HERE 2 " + getDateTime());
     /*split the array node-id wise*/
+    var TIMESTAMP_FINAL = 0;
     $.each( output, function( key, row ) {
 
       // splitArray = row.split(/\s+|:/);
@@ -216,7 +217,8 @@ function processData(output){
       curCnt                   = nodeCountArray[curId];
       nodeArray[curId][curCnt] = row ;
       nodeCountArray[curId]    = nodeCountArray[curId]+1;
-
+      var timestamp      = parseInt(splitArray[POS_TIME]) + TIMESTAMP_INIT ;
+      TIMESTAMP_FINAL = timestamp > TIMESTAMP_FINAL ? timestamp : TIMESTAMP_FINAL; // obtain the final timestamp for the data obtained. This is used later in calculation of network life time and throughput.
     });
     //console.log("HERE 3 " + getDateTime());
     if(first){
@@ -225,29 +227,28 @@ function processData(output){
     /*end of if (first)*/
 
     var
-        xyRxNodeData        = [],
-        xyTxNodeData        = [],
-        xyPdrNodeData       = [],
-        xyTxEnergyNodeData  = [],
-        xyLifetimeNodeData  = [],
-        xyCcaNodeData       = [],
-        xyAvgPathLossData   = [],
-        xyLostNodeData      = [],
-        xyDuplicateNodeData = [],
-        xyInstantPowerData  = [],
-        xyTxEnergyPktData   = [],
-        xyAvgPowerData      = [],
-        TIMESTAMP_FINAL       = 0;
+        xyRxNodeData         = [],
+        xyTxNodeData         = [],
+        xyPdrNodeData        = [],
+        xyTxEnergyNodeData   = [],
+        xyLifetimeNodeData   = [],
+        xyCcaNodeData        = [],
+        xyAvgPathLossData    = [],
+        xyLostNodeData       = [],
+        xyDuplicateNodeData  = [],
+        xyInstantPowerData   = [],
+        xyThroughputNodeData = [],
+        xyTxEnergyPktData    = [],
+        xyAvgPowerData       = [];
 
 //console.log("HERE 4 " + getDateTime());
 
     var cnt = 0;
     // MAIN LOOP
     $.each(nodeCountArray,function(id, count){
-
         if($.inArray(id,filteredNodes) != -1){
-             // console.log("NODE " +id);
-             // console.log(nodeArray[id]);
+             console.log("NODE " +id);
+             console.log(nodeArray[id]);
             var lastPowerlevel = 0;
             var yData          = [];
             var xyData         = [];
@@ -346,8 +347,9 @@ function processData(output){
                 };
 
             });
-            // end of process per one node. timestamp used in canvasJS is in msec but our TIMESTAMP_FINAL and TIMESTAMP_INIT are in seconds
-            TIMESTAMP_FINAL = (timestamp > TIMESTAMP_FINAL*MSEC_FACTOR) ? timestamp/MSEC_FACTOR : TIMESTAMP_FINAL;
+            // end of process per one node. 
+            // timestamp used in canvasJS is in msec but our TIMESTAMP_FINAL and TIMESTAMP_INIT are in seconds
+            // TIMESTAMP_FINAL = (timestamp > TIMESTAMP_FINAL*MSEC_FACTOR) ? timestamp/MSEC_FACTOR : TIMESTAMP_FINAL;
 
             var len               = nodeArray[id].length
             tmpAvgPower           = Math.floor(tmpAvgPower/len);
@@ -376,16 +378,23 @@ function processData(output){
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
-
+             // unique received packets
             xyRxNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : unq.length,
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
+
+             // count is total number of packets received i.e unq packets + duplicates
+             var duplicates = count - unq.length;
+             var total_tx   = parseInt(splitArray[POS_TOTAL_SENT]) + 1;
+             total_tx       += duplicates;
+             var lost       = total_tx - count;
+
              xyTxNodeData[cnt] = {
                                     x          : cnt+1,
-                                    y          : parseInt(splitArray[POS_TOTAL_SENT])+1,
+                                    y          : total_tx,
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
@@ -414,6 +423,15 @@ function processData(output){
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
             };
+            if(id==2){
+                console.log("unq " + unq.length + " data " + DATA_SIZE + " dur " + dur)
+            }
+            xyThroughputNodeData[cnt] = {
+                                    x          : cnt+1,
+                                    y          : (unq.length-1) * DATA_SIZE * 8 / dur  ,
+                                    label      : "Node " + id ,
+                                    indexLabel : "{y}"
+            };
             xyCcaNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : totalCca,
@@ -428,13 +446,13 @@ function processData(output){
              };
              xyLostNodeData[cnt] = {
                                     x          : cnt+1,
-                                    y          : xyTxNodeData[cnt].y - count,
+                                    y          : lost,
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
             xyDuplicateNodeData[cnt] = {
                                     x          : cnt+1,
-                                    y          : count - unq.length,
+                                    y          : duplicates,
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
              };
@@ -649,6 +667,10 @@ function processData(output){
                     type       : chartTypes["lifetimeNode"],
                     dataPoints : xyLifetimeNodeData
     };
+    throughputNodeObj = {
+                    type       : chartTypes["throughputNode"],
+                    dataPoints : xyThroughputNodeData
+    };
     ccaNodeObj = {
                     type       : chartTypes["ccaNode"],
                     dataPoints : xyCcaNodeData
@@ -678,6 +700,7 @@ function processData(output){
     datasets["txRxPdrNode"].push(pdrNodeObj);
     datasets["txEnergyNode"].push(txEnergyNodeObj);
     datasets["lifetimeNode"].push(lifetimeNodeObj);
+    datasets["throughputNode"].push(throughputNodeObj);
     datasets["ccaNode"].push(ccaNodeObj);
     datasets["avgPathLoss"].push(avgPathLossObj);
     datasets["lostNode"].push(lostNodeObj);
