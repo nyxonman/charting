@@ -5,7 +5,8 @@
 ### v_2.8.1
 
    (2018-07-29 18:42:43 +0200) <nyxonman> removed extra logs  
-   (2018-07-29 18:42:09 +0200) <nyxonman> Throughput Feature added, DATA SIZE constant changed to 138, Timestamp final changed the way it is calculated. it is now calculated before hand
+   (2018-07-29 18:42:09 +0200) <nyxonman> Throughput Feature added, DATA SIZE constant changed to 138, Timestamp final changed the way it is calculated. it is now calculated before hand   
+   *Note:* This version has some problem with the calculation of the node lifetime and the throughput. It will be solved in future release
 
 ### v_2.8.0
 
