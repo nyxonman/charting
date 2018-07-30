@@ -63,7 +63,7 @@ const ENERGY_INIT = VOLTAGE * curr_rating * 3600; //in mJoules
 /*data rate and transmission time*/
 var DATA_RATE,DATA_SIZE, TIME_PER_PKT;
 if(TEST_HW){
-    DATA_SIZE    = 138; // bytes
+    DATA_SIZE    = 180; // bytes
     DATA_RATE    = 12.5; //kbps
     TIME_PER_PKT = DATA_SIZE*8 / (DATA_RATE*1000); //IN SECONDS
 }else{
