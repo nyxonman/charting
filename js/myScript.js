@@ -217,9 +217,10 @@ function processData(output){
       curCnt                   = nodeCountArray[curId];
       nodeArray[curId][curCnt] = row ;
       nodeCountArray[curId]    = nodeCountArray[curId]+1;
-      var timestamp      = parseInt(splitArray[POS_TIME]) + TIMESTAMP_INIT ;
-      TIMESTAMP_FINAL = timestamp > TIMESTAMP_FINAL ? timestamp : TIMESTAMP_FINAL; // obtain the final timestamp for the data obtained. This is used later in calculation of network life time and throughput.
+      var timestamp            = parseInt(splitArray[POS_TIME]) + TIMESTAMP_INIT ;
+      TIMESTAMP_FINAL          = timestamp > TIMESTAMP_FINAL ? timestamp : TIMESTAMP_FINAL; // obtain the final timestamp for the data obtained. This is used later in calculation of network life time and throughput.
     });
+    // console.log("final timestamp" + TIMESTAMP_FINAL);
     //console.log("HERE 3 " + getDateTime());
     if(first){
         constructFilter();
@@ -240,8 +241,6 @@ function processData(output){
         xyThroughputNodeData = [],
         xyTxEnergyPktData    = [],
         xyAvgPowerData       = [];
-
-//console.log("HERE 4 " + getDateTime());
 
     var cnt = 0;
     // MAIN LOOP
@@ -287,9 +286,10 @@ function processData(output){
                 splitArray     = row.split(/\s+/);
                 timestamp      = (parseInt(splitArray[POS_TIME]) + TIMESTAMP_INIT) * MSEC_FACTOR ;
                 lastPowerlevel = parseInt(splitArray[POS_POWER_LEVEL]);
-                var unqFlag = 0;
 
-                var myVal = parseInt(splitArray[POS_SEQ_ID]);
+                // obtaining unique items in the list
+                var unqFlag = 0;
+                var myVal   = parseInt(splitArray[POS_SEQ_ID]);
                 if($.inArray(myVal,unq) == -1){
                     unq.push(myVal);
                     unqFlag = 1;
@@ -417,6 +417,7 @@ function processData(output){
              var dur       = TIMESTAMP_FINAL - TIMESTAMP_INIT;
              var drainRate = currEnergy / dur;
              var lifetime  = Math.floor(energyRem / drainRate);
+             
             xyLifetimeNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : lifetime,
@@ -426,7 +427,7 @@ function processData(output){
             
             xyThroughputNodeData[cnt] = {
                                     x          : cnt+1,
-                                    y          : (unq.length-1) * DATA_SIZE * 8 / dur  ,
+                                    y          : ((unq.length-1) * DATA_SIZE * 8 / dur ),
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
             };
