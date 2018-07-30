@@ -97,6 +97,7 @@ charts = {
     "averagePower"    : {},
     "instantPower"    : {},
     "txRxPdrNode"     : {},
+    "lostDupsNode"     : {},
     "throughputNode"      : {},
     "powerEtx"        : {},
     "powerEwmaEtx"    : {}
@@ -117,7 +118,7 @@ chartTypes = {
         "txEnergyTime"    : "line",
         "ccaNode"         : "column",
         "lostNode"        : "column",
-        "duplicateNode"   : "column",
+        "duplicateNode"   : "stackedColumn",
         "rxTime"          : "scatter",
         "nodeTsn"         : "scatter",
         "ccaTime"         : "scatter",
@@ -125,7 +126,8 @@ chartTypes = {
         "avgPathLoss"     : "column",
         "averagePower"    : "column",
         "instantPower"    : "column",
-        "throughputNode"    : "column",
+        "lostDupsNode"    : "stackedColumn",
+        "throughputNode"  : "column",
         "powerEtx"        : "multiLine",
         "txRxPdrNode"     : "multiLine",
         "powerEwmaEtx"    : "multiLine"
@@ -155,6 +157,7 @@ dataTableOption = {
         "averagePower"    : true,
         "instantPower"    : true,
         "throughputNode"  : true,
+        "lostDupsNode"    : true,
         "powerEtx"        : false,
         "txRxPdrNode"     : true,
         "powerEwmaEtx"    : false
@@ -184,6 +187,7 @@ datasets = {
     "averagePower"    : [],
     "instantPower"    : [],
     "throughputNode"    : [], // = total number of unique packets received * pkt size in bytes *8 / duration of the test
+    "lostDupsNode"    : [], 
     "powerEtx"        : [],
     "txRxPdrNode"     : [],
     "powerEwmaEtx"    : []
@@ -322,6 +326,12 @@ chartOptions = {
                         "yAxis2Max"   : null,
                         "thTitle"     : "ETX Threshold",
                         "thValue"     : "1.5"
+                    },
+    "lostDupsNode" : {
+                        "chartTitle"  : "Lost/Duplicate Packets per Node",
+                        "xAxisTitle"  : "Nodes",
+                        "yAxisTitle"  : "No. of pkts",
+                        
                     },
     "txRxPdrNode" : {
                         "chartTitle"  : "Total Received/Sent per Node",

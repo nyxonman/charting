@@ -679,12 +679,17 @@ function processData(output){
                     dataPoints : xyAvgPathLossData
     };
     lostNodeObj = {
+                    // type         : "stackedColumn",
+                    showInLegend : "true",
+                    legendText   : "Lost",
                     type       : chartTypes["lostNode"],
                     dataPoints : xyLostNodeData
     };
     duplicateNodeObj = {
                     type       : chartTypes["duplicateNode"],
-                    dataPoints : xyDuplicateNodeData
+                    dataPoints : xyDuplicateNodeData,
+                    showInLegend : "true",
+                    legendText   : "Duplicates",
     };
     instantPowerObj = {
                     dataPoints : xyInstantPowerData
@@ -702,8 +707,10 @@ function processData(output){
     datasets["throughputNode"].push(throughputNodeObj);
     datasets["ccaNode"].push(ccaNodeObj);
     datasets["avgPathLoss"].push(avgPathLossObj);
-    datasets["lostNode"].push(lostNodeObj);
-    datasets["duplicateNode"].push(duplicateNodeObj);
+    // datasets["lostNode"].push(lostNodeObj);
+    // datasets["duplicateNode"].push(duplicateNodeObj);
+    datasets["lostDupsNode"].push(lostNodeObj);
+    datasets["lostDupsNode"].push(duplicateNodeObj);
 
     datasets["instantPower"].push(instantPowerObj);
     
