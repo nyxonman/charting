@@ -161,7 +161,6 @@
 <!-- nav contents -->
 
 <div class="tab-content" id="pills-tabContent">
-
   <!--  nav contents for network-->
   <div class="tab-pane fade show active" id="pills-network" role="tabpanel" aria-labelledby="pills-network-tab">
 
@@ -184,6 +183,15 @@
                 <li ><a href="#tabs-lostDupsNode" style="font-size: 12px">Lost/Duplicates</a></li>
                 <!-- <li ><a href="#tabs-neighbors" style="font-size: 12px">Neighbors</a></li> -->
             </ul>
+            
+            <div id="" class="row finalStats">
+                <div class="col-sm-2 title"></div>
+                <div class="col-sm-2 min">min:</div>
+                <div class="col-sm-2 max">max:</div>
+                <div class="col-sm-2 total">max:</div>
+                <div class="col-sm-2 average">avg:</div>
+            </div>
+
             <div id="tabs-etx" class="chartTabContent" >
                 <div class="chartsClass" id="etx"></div>
             </div>
@@ -226,10 +234,10 @@
             <div id="tabs-lostDupsNode" class="chartTabContent" >
                 <div class="chartsClass" id="lostDupsNode"></div>
             </div>
-            <div id="tabs-neighbors" class="chartTabContent" >
+            <!-- <div id="tabs-neighbors" class="chartTabContent" >
                 <div class="chartsClass" id="neighbors"></div>
             </div>
-
+ -->
         </div>
   </div>
 
@@ -252,6 +260,15 @@
                 <li ><a href="#tabs-powerEwmaEtx"  style="font-size: 12px">Power vs EWMA ETX</a></li>
 
             </ul>
+
+            <div class="row finalStats">
+                <div class="col-sm-2 title"></div>
+                <div class="col-sm-2 min">min:</div>
+                <div class="col-sm-2 max">max:</div>
+                <div class="col-sm-2 total">max:</div>
+                <div class="col-sm-2 average">avg:</div>
+            </div>
+
             <div id="tabs-powerLevel" class="chartTabContent" >
                 <div class="chartsClass" id="powerLevel"></div>
             </div>
