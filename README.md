@@ -1,7 +1,11 @@
 # charting v_2.8
 
 ## Changelogs
-
+   (2018-08-01 16:14:46 +0200) <nyxonman> removed lost Node and duplicate node frm the configs   
+   (2018-08-01 16:14:07 +0200) <nyxonman> removed neighbor tabs and added div for finalStats   
+   (2018-08-01 16:13:29 +0200) <nyxonman> Updated for the final stats(min, max, total, average). Throughput shows full length and removed unnecessary lost/duplicates chart options   
+   (2018-08-01 16:10:27 +0200) <nyxonman> CSS modified for getting final stats(min, max, total, avg)   
+   
    (2018-07-30 17:04:09 +0200) <nyxonman> Lost and duplicate packet counts in stacked column.  
    (2018-07-30 16:45:01 +0200) <nyxonman> changed data size to 180 Bytes. This the PPDU obtained from the sniffer.
 
