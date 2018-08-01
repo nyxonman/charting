@@ -88,8 +88,11 @@ $(document).ready(function(){
                 if (startCollect==true)
                     intervalId = setInterval(function(){updateChart(false)}, updateInterval);
                 $("#myDataTable").html("");
-                if(dataTableOption[myTabId])
+                if(dataTableOption[myTabId]){
                     insertDataTable(myTabId, datasets[myTabId]);
+                    updateFinalStats(datasets[myTabId]);
+
+                }
             }
             // end of activate function
         });
@@ -158,17 +161,29 @@ function constructFilter(){
 function insertDataTable(id, chartData){
     var table="";
     table+="<div class='row'>"
+
+   table+='<div class="col-sm-2">'
+    table+='<table class="table  table-sm table-bordered table-striped table-responsive">'
+    table+='<caption>' + id + ' Data Table</caption>'
+    table+='<thead><tr><th scope="col">Node</th><th scope="col">X</th></thead><tbody>';
+
+    $.each( chartData[0].dataPoints, function( index, row ){
+        table+='<tr>';
+        table+='<td>'+ row.label +'</td>'
+        table+='<td>'+ row.x +'</td>'
+        table+='</tr>';  
+   });
+   table+='</tbody></table>'
+   table+='</div>'
+
     // for multiple
     $.each( chartData, function( index, object ){
-        table+='<div class="col-sm-4">'
+        table+='<div class="col-sm-2">'
         table+='<table class="table  table-sm table-bordered table-striped table-responsive">'
-        table+='<caption>'+id+' Data Table</caption>'
-        table+='<thead><tr><th scope="col">Node</th><th scope="col">X</th><th scope="col">Y</th></thead><tbody>';
+        table+='<thead><tr><th scope="col">'+object.legendText+'</th></thead><tbody>';
         // process each rows
         $.each(object.dataPoints, function(key, row){
             table+='<tr>';
-            table+='<td>'+ row.label +'</td>'
-            table+='<td>'+ row.x +'</td>'
             table+='<td>'+ row.y +'</td>'
             table+='</tr>';    
         });
@@ -176,11 +191,46 @@ function insertDataTable(id, chartData){
         table+='</div>'
 
     });
-    table+="</div>"
+    table+="</div>" // for the row
 
     $("#myDataTable").html(table);
 }
 
+function updateFinalStats(dataObj){
+    console.log(dataObj);
+
+    var min     = 123456789101112131415;
+    var max     = 0;
+    var total   = 0;
+    var average = 0;
+    var cnt     = 0;
+    var minStr= " ", maxStr= " ", totalStr= " ", averageStr = " ";
+
+    $.each(dataObj,function(key, one){
+        cnt = dataObj[0].dataPoints.length;
+        if (dataObj[0].type == "column" || dataObj[0].type == "stackedColumn"){
+            $.each(dataObj[0].dataPoints, function(id, row){
+                min   = (row.y < min)? row.y : min;
+                max   = (row.y > max)? row.y : max;
+                total += row.y;
+            });
+            average  = total/cnt;
+        }else{
+            min = max = total = average = "N/A"
+        }
+        minStr += min.toString() + " "
+        maxStr += max.toString() + " "
+        totalStr += total.toString() + " "
+        averageStr += average.toString() + " "
+    });
+
+    // display theses statistics in the html
+    $(".finalStats .min").html("Min: " + minStr);
+    $(".finalStats .max").html("max: " + maxStr);
+    $(".finalStats .total").html("total: " + totalStr);
+    $(".finalStats .average").html("average: " + averageStr);
+
+}
 
 function processData(output){
 
@@ -424,13 +474,14 @@ function processData(output){
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
             };
-            
+            throughput = (parseFloat((unq.length - 1 ) * DATA_SIZE *8 )/ parseFloat(dur))
             xyThroughputNodeData[cnt] = {
                                     x          : cnt+1,
-                                    y          : ((unq.length-1) * DATA_SIZE * 8 / dur ),
+                                    y          : throughput,
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
             };
+           
             xyCcaNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : totalCca,
@@ -613,7 +664,7 @@ function processData(output){
     //console.log("HERE 5 " + getDateTime());
     avgPowerObj = {
                     // showInLegend   : true,
-                    // legendText     : "NODE " + id,
+                    legendText     : "AveragePower",
                     //name           : "NODE " + id,
                     type             : chartTypes["averagePower"],
                     // toolTipContent : "<span style='\"'color: {color};'\"'>{name}</span>: {y}",
@@ -621,6 +672,7 @@ function processData(output){
                     dataPoints       : xyAvgPowerData
     };
      txEnergyPktObj = {
+                    legendText     : "Energy/pkt",                    
                     type             : chartTypes["txEnergyPktNode"],
                     dataPoints       : xyTxEnergyPktData
     };
@@ -659,22 +711,27 @@ function processData(output){
 
 
     txEnergyNodeObj = {
+                    legendText     : "totalEnergy",                    
                     type       : chartTypes["txEnergyNode"],
                     dataPoints : xyTxEnergyNodeData
     };
     lifetimeNodeObj = {
+                    legendText     : "Lifetime",                    
                     type       : chartTypes["lifetimeNode"],
                     dataPoints : xyLifetimeNodeData
     };
     throughputNodeObj = {
+                    legendText     : "Throughput",                    
                     type       : chartTypes["throughputNode"],
                     dataPoints : xyThroughputNodeData
     };
     ccaNodeObj = {
+                    legendText     : "CCA",                    
                     type       : chartTypes["ccaNode"],
                     dataPoints : xyCcaNodeData
     };
     avgPathLossObj = {
+                    legendText     : "avgPathLoss",                    
                     type       : chartTypes["avgPathLoss"],
                     dataPoints : xyAvgPathLossData
     };
@@ -682,16 +739,17 @@ function processData(output){
                     // type         : "stackedColumn",
                     showInLegend : "true",
                     legendText   : "Lost",
-                    type       : chartTypes["lostNode"],
+                    type       : "stackedColumn",
                     dataPoints : xyLostNodeData
     };
     duplicateNodeObj = {
-                    type       : chartTypes["duplicateNode"],
+                    type       : "stackedColumn",
                     dataPoints : xyDuplicateNodeData,
                     showInLegend : "true",
                     legendText   : "Duplicates",
     };
     instantPowerObj = {
+                    legendText     : "instantPower",                    
                     dataPoints : xyInstantPowerData
     };
 
@@ -715,8 +773,7 @@ function processData(output){
     datasets["instantPower"].push(instantPowerObj);
     
     first =  false;
-    //console.log("HERE 6 " + getDateTime());
-    
+
 }
 // end of processData function
 
