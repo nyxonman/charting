@@ -206,7 +206,11 @@ function updateFinalStats(dataObj){
     var minStr= " ", maxStr= " ", totalStr= " ", averageStr = " ";
 
     $.each(dataObj,function(key, one){
-        cnt = dataObj[key].dataPoints.length;
+        cnt     = dataObj[key].dataPoints.length;
+        min     = 123456789101112131415;
+        max     = 0;
+        total   = 0;
+        average = 0;
         if (dataObj[key].type == "column" || dataObj[key].type == "stackedColumn"){
             $.each(dataObj[key].dataPoints, function(id, row){
                 min   = (row.y < min)? row.y : min;
@@ -217,9 +221,9 @@ function updateFinalStats(dataObj){
         }else{
             min = max = total = average = "N/A"
         }
-        minStr += min.toString() + " "
-        maxStr += max.toString() + " "
-        totalStr += total.toString() + " "
+        minStr     += min.toString() + " "
+        maxStr     += max.toString() + " "
+        totalStr   += total.toString() + " "
         averageStr += average.toString() + " "
     });
 
