@@ -1,6 +1,9 @@
 # charting v_2.8
 
 ## Changelogs
+
+   (2018-08-03 07:27:32 +0200) <nyxonman> changed the energy/pkt calculation, fixed the throughput decimal places bug
+
    (2018-08-01 16:14:46 +0200) <nyxonman> removed lost Node and duplicate node frm the configs   
    (2018-08-01 16:14:07 +0200) <nyxonman> removed neighbor tabs and added div for finalStats   
    (2018-08-01 16:13:29 +0200) <nyxonman> Updated for the final stats(min, max, total, average). Throughput shows full length and removed unnecessary lost/duplicates chart options   
