@@ -1193,7 +1193,11 @@ function drawColumnChart(id, chartData){
 
 /*controls*/
 $(document).ready(function(){
-
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            html: true,
+        });   
+    });
     $('#logFileSelect').change(function(){
         var filename = $('#logFileSelect').val().split('\\').pop();
         LOG_FILE_NAME=filename;
