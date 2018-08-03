@@ -197,7 +197,6 @@ function insertDataTable(id, chartData){
 }
 
 function updateFinalStats(dataObj){
-    console.log(dataObj);
 
     var min     = 123456789101112131415;
     var max     = 0;
@@ -207,9 +206,9 @@ function updateFinalStats(dataObj){
     var minStr= " ", maxStr= " ", totalStr= " ", averageStr = " ";
 
     $.each(dataObj,function(key, one){
-        cnt = dataObj[0].dataPoints.length;
-        if (dataObj[0].type == "column" || dataObj[0].type == "stackedColumn"){
-            $.each(dataObj[0].dataPoints, function(id, row){
+        cnt = dataObj[key].dataPoints.length;
+        if (dataObj[key].type == "column" || dataObj[key].type == "stackedColumn"){
+            $.each(dataObj[key].dataPoints, function(id, row){
                 min   = (row.y < min)? row.y : min;
                 max   = (row.y > max)? row.y : max;
                 total += row.y;
@@ -293,16 +292,16 @@ function processData(output){
         xyAvgPowerData       = [];
 
     var cnt = 0;
+    var myID = 6; //delete
     // MAIN LOOP
     $.each(nodeCountArray,function(id, count){
         if($.inArray(id,filteredNodes) != -1){
              // console.log("NODE " +id);
-             // console.log(nodeArray[id]);
+            // if(id == myID) console.log(nodeArray[id]);
             var lastPowerlevel = 0;
             var yData          = [];
             var xyData         = [];
             var tmpAvgPower    = 0;
-            var tmpAvgEnergy   = 0;
             var totalCca       = 0;
             var timestamp      = 0;
             xyEtxData          = [],
@@ -387,7 +386,6 @@ function processData(output){
                 };
 
                 // lastTxEnergy = parseInt(splitArray[POS_TOTAL_TX_ENERGY]);originally
-                tmpAvgEnergy += parseInt(splitArray[POS_TOTAL_TX_ENERGY])- lastTxEnergy;
                 lastTxEnergy = parseInt(splitArray[POS_TOTAL_TX_ENERGY]);
 
                 totalCca += parseInt(splitArray[POS_CCA]);
@@ -411,16 +409,6 @@ function processData(output){
                                     indexLabel : "lvl {y}" + "["+ getDbmFromLvl(parseInt(tmpAvgPower)) +"dBm]"
                                 };
 
-            // tmpAvgEnergy          = parseFloat( (tmpAvgEnergy/(parseInt(splitArray[POS_TOTAL_SENT]))).toFixed(3)); // to get avg energy per tx packt
-            tmpAvgEnergy = parseFloat((tmpAvgEnergy/ (unq.length-1)).toFixed(3)) // gives average energy per unique packet received. -1 because the first packet does not have energy consumption info, so we avoid that packet
-            
-            xyTxEnergyPktData[cnt] = {
-                                    x          : cnt+1,
-                                    y          : tmpAvgEnergy,
-                                    name       : "NODE " + id,
-                                    label      : "Node " + id ,
-                                    indexLabel : "{y} mJ/pkt"
-                };
             xyInstantPowerData[cnt] = {
                                     x          : cnt+1,
                                     y          :lastPowerlevel,
@@ -463,6 +451,15 @@ function processData(output){
                                     indexLabel : "{y}"
              };
 
+             var myAvgEnergy = parseFloat( (currEnergy/(unq.length-1)).toFixed(3)); //-1 to remove the first packet as there is no info
+             xyTxEnergyPktData[cnt] = {
+                                    x          : cnt+1,
+                                    y          : myAvgEnergy,
+                                    name       : "NODE " + id,
+                                    label      : "Node " + id ,
+                                    indexLabel : "{y} mJ/pkt"
+            };
+
              var energyRem = ENERGY_INIT - currEnergy;
              var dur       = TIMESTAMP_FINAL - TIMESTAMP_INIT;
              var drainRate = currEnergy / dur;
@@ -474,7 +471,7 @@ function processData(output){
                                     label      : "Node " + id ,
                                     indexLabel : "{y}"
             };
-            throughput = (parseFloat((unq.length - 1 ) * DATA_SIZE *8 )/ parseFloat(dur))
+            throughput = parseFloat( ((unq.length - 1 ) * DATA_SIZE *8 / dur).toFixed(3) ) // -1 because the first packet arrived doesn't have any energy information.
             xyThroughputNodeData[cnt] = {
                                     x          : cnt+1,
                                     y          : throughput,
