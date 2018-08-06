@@ -465,9 +465,10 @@ function processData(output){
             };
 
              var energyRem = ENERGY_INIT - currEnergy;
-             var dur       = TIMESTAMP_FINAL - TIMESTAMP_INIT;
-             var drainRate = currEnergy / dur;
-             var lifetime  = Math.floor(energyRem / drainRate);
+             var dur       = TIMESTAMP_FINAL - TIMESTAMP_INIT; //seconds
+             var drainRate = currEnergy / dur; // mJ/sec
+             var lifetime  = Math.floor(energyRem / drainRate); //seconds
+             lifetime = parseFloat( (lifetime / 3600).toFixed(3)); // hours
              
             xyLifetimeNodeData[cnt] = {
                                     x          : cnt+1,
