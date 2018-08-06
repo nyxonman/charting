@@ -56,9 +56,12 @@ var TIMESTAMP_FINAL   = 0;
 const MIN_TX_POWER_DB = -13;
 
 // for network lifetime
-const VOLTAGE = 3; // volts
-const curr_rating = 3000; //mAH
-const ENERGY_INIT = VOLTAGE * curr_rating * 3600; //in mJoules
+const VOLTAGE        = 3; // volts
+const curr_rating    = 6000; //mAH
+const ENERGY_MAX     = VOLTAGE * curr_rating * 3600; // in mJoules
+const DC_DC_CONV_EFF = 0.9 // DC/DC conversion efficiency
+const USABLE_BATTERY = 0.8 // 80 % of the battery capacity is serviceable
+const ENERGY_INIT    = ENERGY_MAX * DC_DC_CONV_EFF * USABLE_BATTERY; //in mJoules
 
 /*data rate and transmission time*/
 var DATA_RATE,DATA_SIZE, TIME_PER_PKT;
