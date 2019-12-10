@@ -1,5 +1,5 @@
 # charting
 
-```C
+```plantUML
 void function(void);
 ```
